@@ -80,6 +80,7 @@ public class SokoBot {
         if (itemsData[y][x] == box) {
           coords[index][0] = x;
           coords[index][1] = y;
+          index++;
         }
       }
     }
@@ -90,6 +91,19 @@ public class SokoBot {
   // We can keep changing the heuristic to see what works best
   public static double heuristic (int x1, int y1, int x2, int y2) {
     return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+  }
+
+  public static double totalHeuristic (int[][] boxes, int[][] goals) {
+    double total = 0;
+    for (int[] b : boxes) {
+      double best = Double.MAX_VALUE;
+      for (int[] g : goals) {
+        double dist = heuristic(b[0], b[1], g[0], g[1]);
+        if (dist < best) best = dist;
+      }
+      total += best;
+    }
+    return total;
   }
 
 }
