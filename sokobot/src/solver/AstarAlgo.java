@@ -166,7 +166,6 @@ public class AstarAlgo {
     if (goals.contains(pos)) return false;
 
     // helpers
-    boolean inB  = (x>=0 && x<width && y>=0 && y<height);
     boolean upW    = (y-1<0)           || map[y-1][x] == '#';
     boolean downW  = (y+1>=height)     || map[y+1][x] == '#';
     boolean leftW  = (x-1<0)           || map[y][x-1] == '#';
@@ -198,7 +197,4 @@ public class AstarAlgo {
 
 
 
-
-
-    
 }
