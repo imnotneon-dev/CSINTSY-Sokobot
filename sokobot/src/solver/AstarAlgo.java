@@ -155,55 +155,46 @@ public class AstarAlgo {
      * Corner deadlock: two perpendicular walls
      * Corridor deadlock: On a wall, and the wall-bounded segment in that row/col has no goal.
      */
+
+
     private boolean isDeadlock(int x, int y,
-                               char[][] map,
-                               Set<String> goals,
-                               int width,
-                               int height) {
-        String pos = x + "," + y;
-        if (goals.contains(pos)) return false;
+                           char[][] map,
+                           Set<String> goals,
+                           int width,
+                           int height) {
+    String pos = x + "," + y;
+    if (goals.contains(pos)) return false;
 
-        boolean upWall    = !inBounds(x, y - 1, width, height) || isWall(x, y - 1, map);
-        boolean downWall  = !inBounds(x, y + 1, width, height) || isWall(x, y + 1, map);
-        boolean leftWall  = !inBounds(x - 1, y, width, height) || isWall(x - 1, y, map);
-        boolean rightWall = !inBounds(x + 1, y, width, height) || isWall(x + 1, y, map);
+    // helpers
+    boolean inB  = (x>=0 && x<width && y>=0 && y<height);
+    boolean upW    = (y-1<0)           || map[y-1][x] == '#';
+    boolean downW  = (y+1>=height)     || map[y+1][x] == '#';
+    boolean leftW  = (x-1<0)           || map[y][x-1] == '#';
+    boolean rightW = (x+1>=width)      || map[y][x+1] == '#';
 
-        // corner
-        if ((upWall && leftWall) || (upWall && rightWall) ||
-            (downWall && leftWall) || (downWall && rightWall)) {
-            return true;
-        }
+    // 1) Corner 
+    if ((upW && leftW) || (upW && rightW) || (downW && leftW) || (downW && rightW)) return true;
 
-        // corridor
-        if (leftWall || rightWall) {
-            int L = x;
-            while (L - 1 >= 0 && !isWall(L - 1, y, map)) L--;
-            int R = x;
-            while (R + 1 < width && !isWall(R + 1, y, map)) R++;
-
-            boolean hasGoal = false;
-            for (int cx = L; cx <= R; cx++) {
-                if (goals.contains(cx + "," + y)) { hasGoal = true; break; }
-            }
-            if (!hasGoal) return true;
-        }
-
-        // corridor
-        if (upWall || downWall) {
-            int U = y;
-            while (U - 1 >= 0 && !isWall(x, U - 1, map)) U--;
-            int D = y;
-            while (D + 1 < height && !isWall(x, D + 1, map)) D++;
-
-            boolean hasGoal = false;
-            for (int cy = U; cy <= D; cy++) {
-                if (goals.contains(x + "," + cy)) { hasGoal = true; break; }
-            }
-            if (!hasGoal) return true;
-        }
-
-        return false;
+    // 2) Horizontal corridor deadlock Box is tight to a vertical wall AND cannot move perpendicular?? (both up and down are walls),
+    if ((leftW || rightW) && (upW && downW)) {
+        int L=x; while (L-1>=0     && map[y][L-1] != '#') L--;
+        int R=x; while (R+1<width  && map[y][R+1] != '#') R++;
+        boolean hasGoal=false;
+        for (int cx=L; cx<=R; cx++) if (goals.contains(cx + "," + y)) { hasGoal=true; break; }
+        if (!hasGoal) return true;
     }
+
+    // 3) Vertical corridor deadlock Box is tight to a hrizontal wall AND cannot move perpendicular (both left and right are walls),
+    if ((upW || downW) && (leftW && rightW)) {
+        int U=y; while (U-1>=0      && map[U-1][x] != '#') U--;
+        int D=y; while (D+1<height  && map[D+1][x] != '#') D++;
+        boolean hasGoal=false;
+        for (int cy=U; cy<=D; cy++) if (goals.contains(x + "," + cy)) { hasGoal=true; break; }
+        if (!hasGoal) return true;
+    }
+
+    return false;
+}
 
 
 
