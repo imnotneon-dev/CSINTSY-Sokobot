@@ -23,8 +23,9 @@ public class AstarAlgo {
         char[] dirChars = { 'u', 'd', 'l', 'r' };
 
         int exploredStates = 0;
-        int maxStates = 100000000; // cap search so doesnt do inifinite?
-
+        
+        int maxStates = 2147483647; // cap search so doesnt do inifinite?
+                        
         // main loop to find solution 
         while (!openSet.isEmpty() && exploredStates < maxStates) {
             State current = openSet.poll();
@@ -148,7 +149,8 @@ public class AstarAlgo {
     // we skip enqueuing that state.
     private boolean isDeadlock(int x, int y, char[][] map, Set<String> goals, int width, int height) {
         String pos = x + "," + y;
-        if (goals.contains(pos)) return false; // box on a goal is always fine
+        if (goals.contains(pos)) 
+            return false; // box on a goal is always fine
 
         boolean upW    = (y - 1 < 0)       || map[y - 1][x] == '#';
         boolean downW  = (y + 1 >= height) || map[y + 1][x] == '#';
@@ -169,7 +171,8 @@ public class AstarAlgo {
             for (int cx = L; cx <= R; cx++) {
                 if (goals.contains(cx + "," + y)) { hasGoal = true; break; }
             }
-            if (!hasGoal) return true;
+            if (!hasGoal) 
+                return true;
         }
 
         // Vertical corridor deadlock:
@@ -181,7 +184,8 @@ public class AstarAlgo {
             for (int cy = U; cy <= D; cy++) {
                 if (goals.contains(x + "," + cy)) { hasGoal = true; break; }
             }
-            if (!hasGoal) return true;
+            if (!hasGoal) 
+                return true;
         }
 
         return false; // not obviously dead
