@@ -50,7 +50,7 @@ public class SokoBot {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                if (mapData[y][x] == '.' || mapData[y][x] == '*') {
+                if (mapData[y][x] == '.') {
                     goals.add(new int[]{x, y});
                 }
             }
