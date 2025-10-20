@@ -8,7 +8,7 @@ public class SokoBot {
         // get coordinates of player
         int[] startingPoint = SokoBot.getCoordinates(width, height, mapData, itemsData, '@');
         // get coordinatess of goal points for the boxes
-        int[][] goalPoints = SokoBot.getGoalStates(width, height, mapData, '.');
+        int[][] goalPoints = SokoBot.getGoalStates(width, height, mapData);
         // get coordinates of boxes
         int[][] boxStartPoint = SokoBot.getBoxPoints(width, height, itemsData, '$', goalPoints.length);
 
@@ -45,30 +45,18 @@ public class SokoBot {
         return null;
     }
 
-    public static int[][] getGoalStates (int width, int height, char[][] mapData, char goal) {
-        int count = 0;
+    public static int[][] getGoalStates(int width, int height, char[][] mapData) {
+        List<int[]> goals = new ArrayList<>();
+
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                if (mapData[y][x] == goal) {
-                    count++;
+                if (mapData[y][x] == '.' || mapData[y][x] == '*') {
+                    goals.add(new int[]{x, y});
                 }
             }
         }
 
-        int[][] coords = new int[count][2];
-
-        int index = 0;
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                if (mapData[y][x] == goal) {
-                    coords[index][0] = x;
-                    coords[index][1] = y;
-                    index++;
-                }
-            }
-        }
-
-        return coords;
+        return goals.toArray(new int[goals.size()][]);
     }
 
     public static int[][] getBoxPoints (int width, int height, char[][] itemsData, char box, int number) {
