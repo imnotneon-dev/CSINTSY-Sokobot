@@ -1,7 +1,7 @@
 package solver;
 import java.util.*;
 
-public class AstarAlgo {
+public class AStarAlgo {
 
     public String aStarAlgo(int width, int height, char[][] mapData, int[] startingPoint, Set<String> goalSet, Set<String> boxPositions, int[][] goalPoints){
 
@@ -12,7 +12,7 @@ public class AstarAlgo {
 
         // starting coordinates 
         State initialState = new State(startingPoint[0], startingPoint[1], boxPositions, "", 0);
-        initialState.h = SokoBot.totalHeuristic(boxPositions, goalPoints);
+        initialState.h = OldSokoBot.totalHeuristic(boxPositions, goalPoints);
 
         // add initial state to queue
         openSet.add(initialState);
@@ -31,7 +31,7 @@ public class AstarAlgo {
             State current = openSet.poll();
             exploredStates++;
 
-            if (SokoBot.isGoalState(current.boxes, goalSet)) {
+            if (OldSokoBot.isGoalState(current.boxes, goalSet)) {
                 // ADDED: sanity line so we can see how many boxes ended on goals
                 long onGoals = current.boxes.stream().filter(goalSet::contains).count();
                 System.out.println("Boxes on goals: " + onGoals + "/" + current.boxes.size());
@@ -78,7 +78,7 @@ public class AstarAlgo {
                     newBoxes.add(boxNewPos);
 
                     State newState = new State(newX, newY, newBoxes, current.path + dirChars[i], current.g + 1);
-                    newState.h = SokoBot.totalHeuristic(newBoxes, goalPoints);
+                    newState.h = OldSokoBot.totalHeuristic(newBoxes, goalPoints);
 
                     String key = newState.getKey();
                     int candG = newState.g; // compare by g now
@@ -89,7 +89,7 @@ public class AstarAlgo {
                 } else {
                     // Just moving, no box
                     State newState = new State(newX, newY, current.boxes, current.path + dirChars[i], current.g + 1);
-                    newState.h = SokoBot.totalHeuristic(current.boxes, goalPoints);
+                    newState.h = OldSokoBot.totalHeuristic(current.boxes, goalPoints);
 
                     String key = newState.getKey();
                     int candG = newState.g; // compare by g now
