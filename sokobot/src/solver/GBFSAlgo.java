@@ -103,7 +103,6 @@ public class GBFSAlgo {
         Node(int px, int py, Set<Point> boxes, String path, Set<Point> goals, char[][] mapData, int width, int height) {
             this.playerX = px;
             this.playerY = py;
-            // Defensive copy of the boxes set is crucial
             this.boxes = new HashSet<>(boxes); 
             this.path = path;
             this.goals = goals;
@@ -115,12 +114,11 @@ public class GBFSAlgo {
 
         @Override
         public int compareTo(Node other) {
-            // PriorityQueue logic: smaller heuristic value is higher priority
             return Integer.compare(this.heuristic, other.heuristic);
         }
 
+        // simple manhattan distance heuristic (sum of min distances)
         private int calculateHeuristic(Set<Point> boxSet, Set<Point> goalSet) {
-            // Simple Manhattan Distance Heuristic (Sum of Min Distances)
             int accumulatedDistance = 0;
             for (Point box : boxSet) {
                 int closestDistance = Integer.MAX_VALUE;
@@ -159,7 +157,7 @@ public class GBFSAlgo {
             boolean wallLeft = isWall(x - 1, y);
             boolean wallRight = isWall(x + 1, y);
 
-            // Basic Corner Deadlock Check
+            // basic corner deadlock check
             if ((wallUp && wallLeft) || (wallUp && wallRight) || (wallDown && wallLeft) || (wallDown && wallRight))
                 return true;
 
