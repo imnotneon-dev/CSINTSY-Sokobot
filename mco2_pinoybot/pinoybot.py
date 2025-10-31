@@ -8,9 +8,14 @@ This module provides the main tagging function for the PinoyBot project, which i
 Model training and feature extraction should be implemented in a separate script. The trained model should be saved and loaded here for prediction.
 """
 
+import numpy as np
 import os
 import pickle
 from typing import List
+from sklearn.datasets import load_iris
+from sklearn.tree import DecisionTreeClassifier, plot_tree #regressor if number
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
 
 # Main tagging function
 def tag_language(tokens: List[str]) -> List[str]:
@@ -45,6 +50,25 @@ def tag_language(tokens: List[str]) -> List[str]:
 
 if __name__ == "__main__":
     # Example usage
-    example_tokens = ["Love", "kita", "."]
-    print("Tokens:", example_tokens)
-    tags = tag_language(example_tokens)
+    iris = load_iris()
+    print(np.array(iris['data'][:5]))
+
+    X = np.array(iris['data'])
+    y = np.array(iris['target'])
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+    model = DecisionTreeClassifier()
+
+    model.fit(X, y)
+
+    plt.figure(figsize=(12,8))
+    plot_tree(model, feature_names=iris['feature_names'], class_names=iris['target_names'], filled=True)
+    plt.show()
+
+    # example_tokens = ["Love", "kita", "."]
+    # print("Tokens:", example_tokens)
+    # tags = tag_language(example_tokens)
+
+    predictions = model.predict(X_test)
+    print("Predictions:", predictions) 
+    print("Actual:", y_test) 
